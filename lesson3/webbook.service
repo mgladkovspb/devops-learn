@@ -1,0 +1,11 @@
+[Unit]
+Description=WebBook
+
+[Service]
+Type=simple
+ExecStart=echo "Не собрался WebBook!"
+User=webbook
+Group=webbook
+
+[Install]
+WantedBy=multi-user.target
