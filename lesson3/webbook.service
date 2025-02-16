@@ -1,11 +1,13 @@
 [Unit]
 Description=WebBook
+After=network.target
 
 [Service]
 Type=simple
-ExecStart=echo "Не собрался WebBook!"
-User=webbook
-Group=webbook
+WorkingDirectory=/opt/webbooks
+ExecStart=/opt/webbooks/mvnw.conv spring-boot:run
+User=root
+Group=root
 
 [Install]
 WantedBy=multi-user.target
