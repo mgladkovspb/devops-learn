@@ -6,8 +6,8 @@ After=network.target
 Type=simple
 WorkingDirectory=/opt/webbooks
 ExecStart=/opt/webbooks/mvnw.conv spring-boot:run
-User=root
-Group=root
+User=webbook
+Group=webbook
 
 [Install]
 WantedBy=multi-user.target
