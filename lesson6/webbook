@@ -1,0 +1,18 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    return 301 https://localhost$request_uri;
+}
+
+server {
+    listen 443 ssl;
+
+    ssl_certificate /etc/ssl/certs/domain.crt;
+    ssl_certificate_key /etc/ssl/private/domain.key;
+    ssl_session_timeout 5m;
+
+    location / {
+        proxy_pass http://localhost:8080;
+    }
+}
