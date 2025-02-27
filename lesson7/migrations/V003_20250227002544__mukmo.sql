@@ -1,0 +1,1 @@
+create index if not exists orders_client_id_idx on orders (client_id);
