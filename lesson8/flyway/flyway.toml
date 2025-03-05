@@ -1,0 +1,28 @@
+databaseType = "Postgresql"
+id = "b56c9eb9-af6b-4211-a852-e58d6ed21604"
+name = "webbooks"
+
+[flyway]
+locations = [ "filesystem:flyway/migrations" ]
+mixed = true
+outOfOrder = true
+schemaModelLocation = "schema-model"
+validateMigrationNaming = true
+
+[environments.default]
+url = "jdbc:postgresql://localhost:5432/webbooks"
+user = "postgres"
+password = "111"
+
+[flyway.check]
+majorTolerance = 0
+
+[flywayDesktop]
+developmentEnvironment = "development"
+shadowEnvironment = "shadow"
+
+[redgateCompare]
+filterFile = "filter.rgf"
+
+[redgateCompare.postgresql.options.ignores]
+ignoreNewlinesInTextObjects = "off"
