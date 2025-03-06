@@ -1,0 +1,10 @@
+---
+- hosts: all
+  tasks:
+    - name: Ubuntu
+      ansible.builtin.import_tasks: ubuntu.yaml
+      when: ansible_distribution in ['Debian', 'Ubuntu']
+
+    - name: Centos
+      ansible.builtin.import_tasks: centos.yaml
+      when: ansible_distribution in ['CentOS']

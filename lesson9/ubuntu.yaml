@@ -1,0 +1,11 @@
+---
+- name: install ubuntu packages
+  become: yes
+  apt:
+    name:
+      - postgresql
+      - openjdk-17-jdk
+      - openjdk-17-jre
+      - maven
+      - nginx
+    state: latest
