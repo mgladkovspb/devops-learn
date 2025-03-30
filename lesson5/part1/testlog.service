@@ -1,0 +1,14 @@
+[Unit]
+Description=Testlog
+After=network.target
+Wants=testlog.timer
+
+[Service]
+Type=simple
+WorkingDirectory=/home/mukmo
+ExecStart=/usr/bin/bash -c "echo $(date) >> /home/mukmo/data/testlog"
+User=mukmo
+Group=mukmo
+
+[Install]
+WantedBy=multi-user.target

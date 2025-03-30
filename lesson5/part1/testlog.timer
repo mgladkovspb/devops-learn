@@ -1,0 +1,10 @@
+[Unit]
+Description=Testlog timer
+Requires=testlog.service
+
+[Timer]
+Unit=testlog.service
+OnCalendar=*-*-* *:*:00
+
+[Install]
+WantedBy=timers.target
