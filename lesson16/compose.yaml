@@ -1,0 +1,31 @@
+services:
+    proxy:
+        image: nginx
+        volumes:
+          - ./volumes/nginx:/etc/nginx/templates
+        ports:
+          - "80:80"
+
+    db:
+        image: postgres
+        restart: always
+        user: 999:999
+        volumes:
+          - ./build/webbooks/src/main/resources/data.sql:/docker-entrypoint-initdb.d/db.sql
+          - ./volumes/postgres:/var/lib/postgresql/data
+#          - /home/mukmo/pgdata:/var/lib/postgresql/data
+        environment:
+            POSTGRES_HOST_AUTH_METHOD: md5
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: db_webbooks
+        ports:
+          - "5432:5432"
+
+    webbooks:
+        depends_on:
+          - proxy
+          - db
+        build:
+            dockerfile: ./build/Dockerfile
+        ports:
+          - "8080:8080"
