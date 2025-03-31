@@ -9,13 +9,12 @@ services:
     db:
         image: postgres
         restart: always
-        user: 999:999
         volumes:
           - ./build/webbooks/src/main/resources/data.sql:/docker-entrypoint-initdb.d/db.sql
-          - ./volumes/postgres:/var/lib/postgresql/data
-#          - /home/mukmo/pgdata:/var/lib/postgresql/data
+          - webbooks-data:/var/lib/postgresql/data
         environment:
             POSTGRES_HOST_AUTH_METHOD: md5
+            POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: db_webbooks
         ports:
@@ -29,3 +28,6 @@ services:
             dockerfile: ./build/Dockerfile
         ports:
           - "8080:8080"
+
+volumes:
+    webbooks-data:
