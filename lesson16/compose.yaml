@@ -1,13 +1,21 @@
 services:
     proxy:
         image: nginx
+        hostname: proxy
+        depends_on:
+            webbooks:
+                condition: service_started
         volumes:
           - ./volumes/nginx:/etc/nginx/templates
         ports:
           - "80:80"
+        networks:
+            webbooks-network:
+                ipv4_address: 172.16.1.4
 
-    db:
+    wbdb:
         image: postgres
+        hostname: wbdb
         restart: always
         volumes:
           - ./build/webbooks/src/main/resources/data.sql:/docker-entrypoint-initdb.d/db.sql
@@ -19,15 +27,29 @@ services:
             POSTGRES_DB: db_webbooks
         ports:
           - "5432:5432"
+        networks:
+            webbooks-network:
+                ipv4_address: 172.16.1.5
 
     webbooks:
+        hostname: webbooks
         depends_on:
-          - proxy
-          - db
+            wbdb:
+                condition: service_started
         build:
             dockerfile: ./build/Dockerfile
         ports:
           - "8080:8080"
+        networks:
+            webbooks-network:
+                ipv4_address: 172.16.1.6
 
 volumes:
     webbooks-data:
+
+networks:
+    webbooks-network:
+        driver: bridge
+        ipam:
+            config:
+              - subnet: 172.16.1.0/24
