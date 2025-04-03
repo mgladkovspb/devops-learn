@@ -1,0 +1,52 @@
+services:
+    proxy:
+        image: nginx
+        hostname: proxy
+        depends_on:
+            webbooks:
+                condition: service_started
+        volumes:
+          - ./volumes/nginx:/etc/nginx/templates
+        ports:
+          - "80:80"
+        networks:
+            - front
+
+    wbdb:
+        image: postgres
+        hostname: wbdb
+        restart: always
+        volumes:
+          - ./build/webbooks/src/main/resources/data.sql:/docker-entrypoint-initdb.d/db.sql
+          - webbooks-data:/var/lib/postgresql/data
+        environment:
+            POSTGRES_HOST_AUTH_METHOD: md5
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: db_webbooks
+        ports:
+          - "5432:5432"
+        networks:
+            - back
+
+    webbooks:
+        hostname: webbooks
+        depends_on:
+            wbdb:
+                condition: service_started
+        build:
+            dockerfile: ./build/Dockerfile
+        ports:
+          - "8080:8080"
+        networks:
+            - front
+            - back
+
+volumes:
+    webbooks-data:
+
+networks:
+    front:
+        driver: bridge
+    back:
+        driver: bridge
