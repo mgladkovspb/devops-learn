@@ -1,7 +1,7 @@
 kind: Pod
 apiVersion: v1
 metadata:
-  name: backend
+  name: wbdb
   labels:
     app: webbooks
 spec:
@@ -10,6 +10,7 @@ spec:
     image: postgres:latest
     ports:
     - containerPort: 5432
+      protocol: TCP
     env:
     - name: POSTGRES_HOST_AUTH_METHOD
       value: "md5"
@@ -20,18 +21,18 @@ spec:
     - name: POSTGRES_DB
       value: "db_webbooks"
     volumeMounts:
-#    - name: db-init-script
-#      mountPath: /docker-entrypoint-initdb.d/db.sql
-#      subPath: data.sql
+    - name: init-script
+      mountPath: /docker-entrypoint-initdb.d/db.sql
+      subPath: data.sql
     - name: webbooks-vol
       mountPath: /var/lib/postgresql/data
   volumes:
-    # - name: db-init-script
-    #   configMap:
-    #     name: init-script
-    #     items:
-    #     - key: data.sql
-    #       path: ./build/webbooks/src/main/resources/data.sql
+    - name: init-script
+      configMap:
+        name: init-script
+        items:
+        - key: data.sql
+          path: ./build/webbooks/src/main/resources/data.sql
     - name: webbooks-vol
       persistentVolumeClaim:
         claimName: webbooks-pvc
@@ -42,7 +43,7 @@ spec:
 kind: Pod
 apiVersion: v1
 metadata:
-  name: frontend
+  name: webbooks
   labels:
     app: webbooks
 spec:
@@ -83,14 +84,14 @@ metadata:
   name: webbooks-pv
 spec:
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
   storageClassName: local-storage
   local:
-    path: /data
+    path: /data/wbdb
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -110,7 +111,6 @@ metadata:
   labels:
     app: webbooks
 spec:
-#  storageClassName: slow
   accessModes:
   - ReadWriteOnce
   resources:
